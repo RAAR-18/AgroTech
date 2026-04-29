@@ -14,7 +14,7 @@ public class TipoCultivo {
     @Column(name = "nombre", length = 100)
     private String nombre;
 
-    @ManyToMany(mappedBy = "tiposCultivos", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tipoCultivo", fetch = FetchType.LAZY)
     private List<Cultivo> cultivos;
 
     public TipoCultivo() {}
