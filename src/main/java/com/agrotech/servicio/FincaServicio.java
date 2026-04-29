@@ -1,6 +1,7 @@
 package com.agrotech.servicio;
 
 import com.agrotech.dto.request.FincaRequest;
+import com.agrotech.dto.request.FincaUpdateRequest;
 import com.agrotech.dto.response.FincaResponse;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface FincaServicio {
     FincaResponse crear(Integer idProductor, FincaRequest fincaRequest);
 
     // Editar finca
-    FincaResponse actualizar(Integer idFinca, Integer idProductor, FincaRequest fincaRequest);
+    FincaResponse actualizar(Integer idFinca, Integer idProductor, FincaUpdateRequest fincaUpdateRequest);
 
     // Eliminar finca
     void eliminar(Integer id);

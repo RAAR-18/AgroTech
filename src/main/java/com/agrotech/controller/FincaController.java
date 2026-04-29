@@ -1,6 +1,7 @@
 package com.agrotech.controller;
 
 import com.agrotech.dto.request.FincaRequest;
+import com.agrotech.dto.request.FincaUpdateRequest;
 import com.agrotech.dto.response.FincaResponse;
 import com.agrotech.servicio.FincaServicio;
 import org.springframework.http.HttpStatus;
@@ -46,8 +47,8 @@ public class FincaController {
     // Editar finca
     // PUT /api/fincas/{idFinca}/productor/{idProductor
     @PutMapping("/{idFinca}/productor/{idProductor}")
-    public ResponseEntity<FincaResponse> actualizar(@PathVariable Integer idFinca, @PathVariable Integer idProductor, @RequestBody FincaRequest fincaRequest) {
-        FincaResponse fincaActualizada = fincaService.actualizar(idFinca, idProductor, fincaRequest);
+    public ResponseEntity<FincaResponse> actualizar(@PathVariable Integer idFinca, @PathVariable Integer idProductor, @RequestBody FincaUpdateRequest fincaUpdateRequest) {
+        FincaResponse fincaActualizada = fincaService.actualizar(idFinca, idProductor, fincaUpdateRequest);
         return ResponseEntity.ok(fincaActualizada);
     }
 

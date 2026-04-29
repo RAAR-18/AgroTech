@@ -4,6 +4,7 @@ import com.agrotech.Entity.Finca;
 import com.agrotech.Entity.Productor;
 import com.agrotech.Entity.Ubicacion;
 import com.agrotech.dto.request.FincaRequest;
+import com.agrotech.dto.request.FincaUpdateRequest;
 import com.agrotech.dto.response.FincaResponse;
 import com.agrotech.mapper.FincaMapper;
 import com.agrotech.repository.FincaRepository;
@@ -75,21 +76,16 @@ public class FincaServicioImpl implements FincaServicio {
 
     // Actualizar finca
     @Override
-    public FincaResponse actualizar(Integer idFinca, Integer idProductor, FincaRequest fincaRequest) {
+    public FincaResponse actualizar(Integer idFinca, Integer idProductor, FincaUpdateRequest fincaUpdateRequest) {
         // Buscar finca
         Finca finca = fincaRepository.findById(idFinca)
                 .orElseThrow(() -> new RuntimeException("Finca no encontrada con ID: " + idFinca));
 
-        // Buscar ubicacion
-        Ubicacion ubicacion = ubicacionRepository.findById(fincaRequest.getIdUbicacion())
-                .orElseThrow(() -> new RuntimeException("Ubicación no encontrada con ID: " + fincaRequest.getIdUbicacion()));
+        fincaMapper.updateEntityFromRequest(fincaUpdateRequest, finca);
 
-        // Actualizar campos
-        finca.setNombreFinca(fincaRequest.getNombreFinca());
-        finca.setHectareas(fincaMapper.toBigDecimal(fincaRequest.getHectareas()));
-        finca.setUbicacion(ubicacion);
+        Finca fincaActualizada = fincaRepository.save(finca);
 
-        return fincaMapper.toResponse(fincaRepository.save(finca));
+        return fincaMapper.toResponse(fincaActualizada);
     }
 
     @Override
