@@ -29,9 +29,6 @@ public class Finca {
     @OneToMany(mappedBy = "finca", fetch = FetchType.LAZY)
     private List<Siembra> siembras;
 
-    @OneToMany(mappedBy = "finca", fetch = FetchType.LAZY)
-    private List<Anomalia> anomalias;
-
     public Finca() {}
 
     public Finca(Integer idFinca, String nombreFinca, BigDecimal hectareas,
@@ -60,9 +57,6 @@ public class Finca {
 
     public List<Siembra> getSiembras() { return siembras; }
     public void setSiembras(List<Siembra> siembras) { this.siembras = siembras; }
-
-    public List<Anomalia> getAnomalias() { return anomalias; }
-    public void setAnomalias(List<Anomalia> anomalias) { this.anomalias = anomalias; }
 
     @Override
     public String toString() {
