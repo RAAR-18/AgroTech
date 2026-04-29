@@ -12,10 +12,13 @@ import java.util.List;
 @Repository
 public interface FincaRepository extends JpaRepository<Finca, Integer> {
 
+    // Buscar fincas de un productor
     List<Finca> findByProductor_IdUsuario(Integer idProductor);
 
+    // Buscar por ubicación
     List<Finca> findByUbicacion_IdUbicacion(Integer idUbicacion);
 
+    // Buscar por nombre
     List<Finca> findByNombreFincaContainingIgnoreCase(String nombre);
 
     List<Finca> findByHectareasGreaterThanEqual(BigDecimal hectareas);
