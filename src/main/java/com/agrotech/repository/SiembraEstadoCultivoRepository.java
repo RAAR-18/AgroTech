@@ -14,6 +14,7 @@ import java.util.List;
 public interface SiembraEstadoCultivoRepository
         extends JpaRepository<SiembraEstadoCultivo, SiembraEstadoCultivoId> {
 
+    // Historial de estados de una siembra
     List<SiembraEstadoCultivo> findById_IdSiembra(Integer idSiembra);
 
     // Buscar por estado
@@ -24,8 +25,10 @@ public interface SiembraEstadoCultivoRepository
     List<SiembraEstadoCultivo> findByRangoFecha(@Param("desde") LocalDateTime desde,
                                                  @Param("hasta") LocalDateTime hasta);
 
+    // Estado más reciente de una siembra
     @Query("SELECT sec FROM SiembraEstadoCultivo sec " +
            "WHERE sec.siembra.idSiembra = :idSiembra " +
            "ORDER BY sec.fechaEstado DESC")
-    List<SiembraEstadoCultivo> findHistorialBySiembra(@Param("idSiembra") Integer idSiembra);
+    List<SiembraEstadoCultivo> findUltimoEstado(@Param("idSiembra") Integer idSiembra);
+
 }
