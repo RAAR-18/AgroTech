@@ -16,6 +16,7 @@ public interface SiembraEstadoCultivoRepository
 
     List<SiembraEstadoCultivo> findById_IdSiembra(Integer idSiembra);
 
+    // Buscar por estado
     List<SiembraEstadoCultivo> findById_IdEstadoCultivo(Integer idEstadoCultivo);
 
     @Query("SELECT sec FROM SiembraEstadoCultivo sec " +
