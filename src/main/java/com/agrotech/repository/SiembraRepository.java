@@ -11,8 +11,10 @@ import java.util.List;
 @Repository
 public interface SiembraRepository extends JpaRepository<Siembra, Integer> {
 
+    // Buscar siembra por cultivo
     List<Siembra> findByCultivo_IdCultivo(Integer idCultivo);
 
+    // Buscar siembra por finca
     List<Siembra> findByFinca_IdFinca(Integer idFinca);
 
     @Query("SELECT s FROM Siembra s WHERE s.finca.idFinca = :idFinca " +
