@@ -11,10 +11,13 @@ import java.util.List;
 @Repository
 public interface CultivoRepository extends JpaRepository<Cultivo, Integer> {
 
+    // Buscar cultivo por nombre sin distinción de mayúscula
     List<Cultivo> findByNombreContainingIgnoreCase(String nombre);
 
+    // Buscar cultivo por numero de lote
     List<Cultivo> findByNumeroLote(Integer numeroLote);
 
+    // Buscar cultivos por tipo de cultivo
     @Query("SELECT c FROM Cultivo c JOIN c.tiposCultivos t WHERE t.idTiposCultivos = :idTipo")
     List<Cultivo> findByTipoCultivoId(@Param("idTipo") Integer idTipo);
 
