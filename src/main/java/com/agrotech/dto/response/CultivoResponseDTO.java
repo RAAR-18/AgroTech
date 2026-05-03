@@ -1,14 +1,14 @@
 package com.agrotech.dto.response;
 
-public class CultivoResponse {
+public class CultivoResponseDTO {
 
     private Integer idCultivo;
     private String nombre;
     private String nombreTipoCultivo;
 
-    public CultivoResponse() {}
+    public CultivoResponseDTO() {}
 
-    public CultivoResponse(Integer idCultivo, String nombre, String nombreTipoCultivo) {
+    public CultivoResponseDTO(Integer idCultivo, String nombre, String nombreTipoCultivo) {
         this.idCultivo = idCultivo;
         this.nombre = nombre;
         this.nombreTipoCultivo = nombreTipoCultivo;
