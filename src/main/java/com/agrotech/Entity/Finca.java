@@ -18,6 +18,9 @@ public class Finca {
     @Column(name = "hectareas", precision = 10, scale = 2)
     private BigDecimal hectareas;
 
+    @Column(name = "num_lotes")
+    private Integer numLotes;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_ubicacion")
     private Ubicacion ubicacion;
@@ -32,12 +35,13 @@ public class Finca {
     public Finca() {}
 
     public Finca(Integer idFinca, String nombreFinca, BigDecimal hectareas,
-                 Ubicacion ubicacion, Productor productor) {
+                 Ubicacion ubicacion, Productor productor, Integer numLotes) {
         this.idFinca = idFinca;
         this.nombreFinca = nombreFinca;
         this.hectareas = hectareas;
         this.ubicacion = ubicacion;
         this.productor = productor;
+        this.numLotes = numLotes;
     }
 
     public Integer getIdFinca() { return idFinca; }
@@ -58,10 +62,18 @@ public class Finca {
     public List<Siembra> getSiembras() { return siembras; }
     public void setSiembras(List<Siembra> siembras) { this.siembras = siembras; }
 
+    public Integer getNumLotes() {
+        return numLotes;
+    }
+
+    public void setNumLotes(Integer numLotes) {
+        this.numLotes = numLotes;
+    }
+
     @Override
     public String toString() {
         return "Finca{idFinca=" + idFinca + ", nombreFinca='" + nombreFinca +
-                "', hectareas=" + hectareas + "}";
+                "', hectareas=" + hectareas + "numLotes=" + numLotes + "}";
     }
 
 }
