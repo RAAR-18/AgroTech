@@ -3,7 +3,7 @@ package com.agrotech.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
-public class FincaUpdateRequest {
+public class FincaUpdateRequestDTO {
 
     @NotBlank(message = "El nombre de la finca es obligatorio")
     private String nombreFinca;
@@ -11,9 +11,9 @@ public class FincaUpdateRequest {
     @Positive(message = "Las hectáreas deben ser un número positivo")
     private Double hectareas;
 
-    public FincaUpdateRequest() {}
+    public FincaUpdateRequestDTO() {}
 
-    public FincaUpdateRequest(String nombreFinca, Double hectareas) {
+    public FincaUpdateRequestDTO(String nombreFinca, Double hectareas) {
         this.nombreFinca = nombreFinca;
         this.hectareas = hectareas;
     }

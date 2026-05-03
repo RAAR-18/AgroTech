@@ -1,16 +1,16 @@
-package com.agrotech.servicio.impl;
+package com.agrotech.service.impl;
 
 import com.agrotech.Entity.Finca;
 import com.agrotech.Entity.Productor;
 import com.agrotech.Entity.Ubicacion;
-import com.agrotech.dto.request.FincaRequest;
-import com.agrotech.dto.request.FincaUpdateRequest;
-import com.agrotech.dto.response.FincaResponse;
+import com.agrotech.dto.request.FincaRequestDTO;
+import com.agrotech.dto.request.FincaUpdateRequestDTO;
+import com.agrotech.dto.response.FincaResponseDTO;
 import com.agrotech.mapper.FincaMapper;
 import com.agrotech.repository.FincaRepository;
 import com.agrotech.repository.ProductorRepository;
 import com.agrotech.repository.UbicacionRepository;
-import com.agrotech.servicio.FincaServicio;
+import com.agrotech.service.FincaServIce;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,14 +18,14 @@ import java.util.List;
 
 @Service
 @Transactional
-public class FincaServicioImpl implements FincaServicio {
+public class FincaServIceImpl implements FincaServIce {
 
     private final FincaRepository fincaRepository;
     private final ProductorRepository productorRepository;
     private final UbicacionRepository ubicacionRepository;
     private final FincaMapper fincaMapper;
 
-    public FincaServicioImpl(FincaRepository fincaRepository, ProductorRepository productorRepository, UbicacionRepository ubicacionRepository, FincaMapper fincaMapper) {
+    public FincaServIceImpl(FincaRepository fincaRepository, ProductorRepository productorRepository, UbicacionRepository ubicacionRepository, FincaMapper fincaMapper) {
         this.fincaRepository = fincaRepository;
         this.productorRepository = productorRepository;
         this.ubicacionRepository = ubicacionRepository;
@@ -34,7 +34,7 @@ public class FincaServicioImpl implements FincaServicio {
 
     // Listar por productor
     @Override
-    public List<FincaResponse> listarPorProductor(Integer idProductor) {
+    public List<FincaResponseDTO> listarPorProductor(Integer idProductor) {
         List<Finca> fincas = fincaRepository.findByProductor_IdUsuario(idProductor);
         return fincas.stream()
                 .map(fincaMapper::toResponse)
@@ -43,7 +43,7 @@ public class FincaServicioImpl implements FincaServicio {
 
     // Listar fincas por id
     @Override
-    public FincaResponse buscarPorId(Integer idFinca) {
+    public FincaResponseDTO buscarPorId(Integer idFinca) {
         Finca finca = fincaRepository.findById(idFinca)
                 .orElseThrow(() -> new RuntimeException("Finca no encontrada con ID: " + idFinca));
         return fincaMapper.toResponse(finca);
@@ -51,18 +51,24 @@ public class FincaServicioImpl implements FincaServicio {
 
     // Crear finca
     @Override
-    public FincaResponse crear(Integer idProductor, FincaRequest fincaRequest) {
+    public FincaResponseDTO crear(Integer idProductor, FincaRequestDTO fincaRequestDTO) {
 
         // Buscar productor
         Productor productor = productorRepository.findById(idProductor)
                 .orElseThrow(() -> new RuntimeException("Productor no encontrada con ID: " + idProductor));
 
         // Buscar ubicación
-        Ubicacion ubicacion = ubicacionRepository.findById(fincaRequest.getIdUbicacion())
-                .orElseThrow(() -> new RuntimeException("Ubicación no encontrada con ID: " + fincaRequest.getIdUbicacion()));
+        Ubicacion ubicacion = ubicacionRepository.findById(fincaRequestDTO.getIdUbicacion())
+                .orElseThrow(() -> new RuntimeException("Ubicación no encontrada con ID: " + fincaRequestDTO.getIdUbicacion()));
+
+        boolean existeFinca = fincaRepository.existsByNombreFincaAndProductor_IdUsuario(fincaRequestDTO.getNombreFinca(), idProductor);
+
+        if (existeFinca) {
+            throw new RuntimeException("Ya existe una finca con el mismo nombre para este productor");
+        }
 
         // convertir FincaRequest a Finca
-        Finca finca = fincaMapper.toEntity(fincaRequest);
+        Finca finca = fincaMapper.toEntity(fincaRequestDTO);
 
         finca.setProductor(productor);
         finca.setUbicacion(ubicacion);
@@ -76,12 +82,21 @@ public class FincaServicioImpl implements FincaServicio {
 
     // Actualizar finca
     @Override
-    public FincaResponse actualizar(Integer idFinca, Integer idProductor, FincaUpdateRequest fincaUpdateRequest) {
+    public FincaResponseDTO actualizar(Integer idFinca, Integer idProductor, FincaUpdateRequestDTO fincaUpdateRequestDTO) {
         // Buscar finca
         Finca finca = fincaRepository.findById(idFinca)
                 .orElseThrow(() -> new RuntimeException("Finca no encontrada con ID: " + idFinca));
 
-        fincaMapper.updateEntityFromRequest(fincaUpdateRequest, finca);
+        if (fincaUpdateRequestDTO.getNombreFinca() != null && !fincaUpdateRequestDTO.getNombreFinca().equalsIgnoreCase(finca.getNombreFinca())) {
+            boolean existeFinca = fincaRepository.existsByNombreFincaAndProductor_IdUsuario(fincaUpdateRequestDTO.getNombreFinca(), idProductor);
+
+            if (existeFinca) {
+                throw new RuntimeException("Ya existe una finca con el mismo nombre para este productor");
+            }
+        }
+
+        fincaMapper.updateEntityFromRequest(fincaUpdateRequestDTO, finca);
+        fincaMapper.updateHectareas(fincaUpdateRequestDTO, finca);
 
         Finca fincaActualizada = fincaRepository.save(finca);
 
