@@ -1,16 +1,16 @@
-package com.agrotech.servicio.impl;
+package com.agrotech.service.impl;
 
 import com.agrotech.Entity.EstadoCultivo;
 import com.agrotech.Entity.Siembra;
 import com.agrotech.Entity.SiembraEstadoCultivo;
 import com.agrotech.Entity.SiembraEstadoCultivoId;
-import com.agrotech.dto.request.SiembraEstadoCultivoRequest;
-import com.agrotech.dto.response.SiembraEstadoCultivoResponse;
+import com.agrotech.dto.request.SiembraEstadoCultivoRequestDTO;
+import com.agrotech.dto.response.SiembraEstadoCultivoResponseDTO;
 import com.agrotech.mapper.SiembraEstadoCultivoMapper;
 import com.agrotech.repository.EstadoCultivoRepository;
 import com.agrotech.repository.SiembraEstadoCultivoRepository;
 import com.agrotech.repository.SiembraRepository;
-import com.agrotech.servicio.SiembraEstadoCultivoServicio;
+import com.agrotech.service.SiembraEstadoCultivoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,17 +19,17 @@ import java.util.List;
 
 @Service
 @Transactional
-public class SiembraEstadoCultivoServicioImpl implements SiembraEstadoCultivoServicio {
+public class SiembraEstadoCultivoServiceImpl implements SiembraEstadoCultivoService {
 
     private final SiembraEstadoCultivoRepository siembraEstadoCultivoRepository;
     private final SiembraRepository siembraRepository;
     private final EstadoCultivoRepository estadoCultivoRepository;
     private final SiembraEstadoCultivoMapper siembraEstadoCultivoMapper;
 
-    public SiembraEstadoCultivoServicioImpl(SiembraEstadoCultivoRepository siembraEstadoCultivoRepository,
-                                            SiembraRepository siembraRepository,
-                                            EstadoCultivoRepository estadoCultivoRepository,
-                                            SiembraEstadoCultivoMapper siembraEstadoCultivoMapper) {
+    public SiembraEstadoCultivoServiceImpl(SiembraEstadoCultivoRepository siembraEstadoCultivoRepository,
+                                           SiembraRepository siembraRepository,
+                                           EstadoCultivoRepository estadoCultivoRepository,
+                                           SiembraEstadoCultivoMapper siembraEstadoCultivoMapper) {
         this.siembraEstadoCultivoRepository = siembraEstadoCultivoRepository;
         this.siembraRepository = siembraRepository;
         this.estadoCultivoRepository = estadoCultivoRepository;
@@ -37,11 +37,11 @@ public class SiembraEstadoCultivoServicioImpl implements SiembraEstadoCultivoSer
     }
 
     @Override
-    public SiembraEstadoCultivoResponse registrarEstadoCultivo(SiembraEstadoCultivoRequest siembraEstadoCultivoRequest) {
-        Siembra siembra = siembraRepository.findById(siembraEstadoCultivoRequest.getIdSiembra())
+    public SiembraEstadoCultivoResponseDTO registrarEstadoCultivo(SiembraEstadoCultivoRequestDTO siembraEstadoCultivoRequestDTO) {
+        Siembra siembra = siembraRepository.findById(siembraEstadoCultivoRequestDTO.getIdSiembra())
                 .orElseThrow(() -> new RuntimeException("Siembra no encontrada"));
 
-        EstadoCultivo estadoCultivo = estadoCultivoRepository.findById(siembraEstadoCultivoRequest.getIdEstadoCultivo())
+        EstadoCultivo estadoCultivo = estadoCultivoRepository.findById(siembraEstadoCultivoRequestDTO.getIdEstadoCultivo())
                 .orElseThrow(() -> new RuntimeException("Estado de cultivo no encontrado"));
 
         SiembraEstadoCultivoId id = new SiembraEstadoCultivoId(siembra.getIdSiembra(), estadoCultivo.getIdEstadoCultivo());
@@ -58,7 +58,7 @@ public class SiembraEstadoCultivoServicioImpl implements SiembraEstadoCultivoSer
 
     @Override
     @Transactional(readOnly = true)
-    public List<SiembraEstadoCultivoResponse> listarPorSiembra(Integer idSiembra) {
+    public List<SiembraEstadoCultivoResponseDTO> listarPorSiembra(Integer idSiembra) {
         return siembraEstadoCultivoRepository.findById_IdSiembra(idSiembra)
                 .stream()
                 .map(siembraEstadoCultivoMapper::toResponse)
@@ -67,7 +67,7 @@ public class SiembraEstadoCultivoServicioImpl implements SiembraEstadoCultivoSer
 
     @Override
     @Transactional(readOnly = true)
-    public SiembraEstadoCultivoResponse obtenerEstadoCultivoActual(Integer idSiembra) {
+    public SiembraEstadoCultivoResponseDTO obtenerEstadoCultivoActual(Integer idSiembra) {
         List<SiembraEstadoCultivo> estados = siembraEstadoCultivoRepository.findUltimoEstado(idSiembra);
 
         if (estados.isEmpty()) {
@@ -79,7 +79,7 @@ public class SiembraEstadoCultivoServicioImpl implements SiembraEstadoCultivoSer
 
     @Override
     @Transactional(readOnly = true)
-    public List<SiembraEstadoCultivoResponse> listarPorEstadoCultivo(Integer idEstadoCultivo) {
+    public List<SiembraEstadoCultivoResponseDTO> listarPorEstadoCultivo(Integer idEstadoCultivo) {
         return siembraEstadoCultivoRepository.findById_IdEstadoCultivo(idEstadoCultivo)
                 .stream()
                 .map(siembraEstadoCultivoMapper::toResponse)
