@@ -11,6 +11,9 @@ public class Siembra {
     @Column(name = "id_siembra")
     private Integer idSiembra;
 
+    @Column(name = "num_lote")
+    private Integer numLote;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cultivo", nullable = false)
     private Cultivo cultivo;
@@ -24,10 +27,12 @@ public class Siembra {
 
     public Siembra() {}
 
-    public Siembra(Integer idSiembra, Cultivo cultivo, Finca finca) {
+    public Siembra(Integer idSiembra, Cultivo cultivo, Finca finca, Integer numLote) {
+         this.numLote = numLote;
         this.idSiembra = idSiembra;
         this.cultivo = cultivo;
         this.finca = finca;
+        this.numLote = numLote;
     }
 
     public Integer getIdSiembra() { return idSiembra; }
@@ -44,9 +49,22 @@ public class Siembra {
         this.estadosCultivo = estadosCultivo;
     }
 
-    @Override
-    public String toString() {
-        return "Siembra{idSiembra=" + idSiembra + "}";
+    public Integer getNumLote() {
+        return numLote;
     }
 
+    public void setNumLote(Integer numLote) {
+        this.numLote = numLote;
+    }
+
+    @Override
+    public String toString() {
+        return "Siembra{" +
+                "idSiembra=" + idSiembra +
+                ", numLote=" + numLote +
+                ", cultivo=" + cultivo +
+                ", finca=" + finca +
+                ", estadosCultivo=" + estadosCultivo +
+                '}';
+    }
 }
