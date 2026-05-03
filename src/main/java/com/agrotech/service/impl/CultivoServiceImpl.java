@@ -1,13 +1,13 @@
-package com.agrotech.servicio.impl;
+package com.agrotech.service.impl;
 
 import com.agrotech.Entity.Cultivo;
 import com.agrotech.Entity.TipoCultivo;
-import com.agrotech.dto.request.CultivoRequest;
-import com.agrotech.dto.response.CultivoResponse;
+import com.agrotech.dto.request.CultivoRequestDTO;
+import com.agrotech.dto.response.CultivoResponseDTO;
 import com.agrotech.mapper.CultivoMapper;
 import com.agrotech.repository.CultivoRepository;
 import com.agrotech.repository.TipoCultivoRepository;
-import com.agrotech.servicio.CultivoServicio;
+import com.agrotech.service.CultivoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,32 +15,32 @@ import java.util.List;
 
 @Service
 @Transactional
-public class CultivoServicioImpl implements CultivoServicio {
+public class CultivoServiceImpl implements CultivoService {
 
     private final CultivoRepository cultivoRepository;
     private final TipoCultivoRepository tipoCultivoRepository;
     private final CultivoMapper cultivoMapper;
 
-    public CultivoServicioImpl(CultivoRepository cultivoRepository, TipoCultivoRepository tipoCultivoRepository, CultivoMapper cultivoMapper) {
+    public CultivoServiceImpl(CultivoRepository cultivoRepository, TipoCultivoRepository tipoCultivoRepository, CultivoMapper cultivoMapper) {
         this.cultivoRepository = cultivoRepository;
         this.tipoCultivoRepository = tipoCultivoRepository;
         this.cultivoMapper = cultivoMapper;
     }
 
     @Override
-    public CultivoResponse crear(CultivoRequest cultivoRequest) {
-        TipoCultivo tipo = tipoCultivoRepository.findById(cultivoRequest.getIdTipoCultivo())
-                .orElseThrow(() -> new RuntimeException("TipoCultivo no encontrado con id: " + cultivoRequest.getIdTipoCultivo()));
+    public CultivoResponseDTO crear(CultivoRequestDTO cultivoRequestDTO) {
+        TipoCultivo tipo = tipoCultivoRepository.findById(cultivoRequestDTO.getIdTipoCultivo())
+                .orElseThrow(() -> new RuntimeException("TipoCultivo no encontrado con id: " + cultivoRequestDTO.getIdTipoCultivo()));
 
         Cultivo cultivo = new Cultivo();
-        cultivo.setNombre(cultivoRequest.getNombre());
+        cultivo.setNombre(cultivoRequestDTO.getNombre());
         cultivo.setTipoCultivo(tipo);
 
         return cultivoMapper.toResponse(cultivoRepository.save(cultivo));
     }
 
     @Override
-    public CultivoResponse buscarPorId(Integer id) {
+    public CultivoResponseDTO buscarPorId(Integer id) {
         Cultivo cultivo = cultivoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cultivo no encontrado con id: " + id));
         return cultivoMapper.toResponse(cultivo);
@@ -48,7 +48,7 @@ public class CultivoServicioImpl implements CultivoServicio {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CultivoResponse> buscarPorNombre(String nombre) {
+    public List<CultivoResponseDTO> buscarPorNombre(String nombre) {
         return cultivoRepository.findByNombreContainingIgnoreCase(nombre)
                 .stream()
                 .map(cultivoMapper::toResponse)
@@ -57,7 +57,7 @@ public class CultivoServicioImpl implements CultivoServicio {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CultivoResponse> buscarPorTipo(Integer idTipoCultivo) {
+    public List<CultivoResponseDTO> buscarPorTipo(Integer idTipoCultivo) {
         return cultivoRepository.findByTipoCultivo_IdTiposCultivos(idTipoCultivo)
                 .stream()
                 .map(cultivoMapper::toResponse)
@@ -66,7 +66,7 @@ public class CultivoServicioImpl implements CultivoServicio {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CultivoResponse> listarTodos() {
+    public List<CultivoResponseDTO> listarTodos() {
         return cultivoRepository.findAll()
                 .stream()
                 .map(cultivoMapper::toResponse)
@@ -75,7 +75,7 @@ public class CultivoServicioImpl implements CultivoServicio {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CultivoResponse> filtrarPorNombreTipo(String nombreTipo) {
+    public List<CultivoResponseDTO> filtrarPorNombreTipo(String nombreTipo) {
         return cultivoRepository.findByTipoCultivo_NombreContainingIgnoreCase(nombreTipo)
                 .stream()
                 .map(cultivoMapper::toResponse)
@@ -83,14 +83,14 @@ public class CultivoServicioImpl implements CultivoServicio {
     }
 
     @Override
-    public CultivoResponse actualizar(Integer id, CultivoRequest cultivoRequest) {
+    public CultivoResponseDTO actualizar(Integer id, CultivoRequestDTO cultivoRequestDTO) {
         Cultivo cultivo = cultivoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cultivo no encontrado con id: " + id));
 
-        TipoCultivo tipo = tipoCultivoRepository.findById(cultivoRequest.getIdTipoCultivo())
-                .orElseThrow(() -> new RuntimeException("TipoCultivo no encontrado con id: " + cultivoRequest.getIdTipoCultivo()));
+        TipoCultivo tipo = tipoCultivoRepository.findById(cultivoRequestDTO.getIdTipoCultivo())
+                .orElseThrow(() -> new RuntimeException("TipoCultivo no encontrado con id: " + cultivoRequestDTO.getIdTipoCultivo()));
 
-        cultivo.setNombre(cultivoRequest.getNombre());
+        cultivo.setNombre(cultivoRequestDTO.getNombre());
         cultivo.setTipoCultivo(tipo);
 
         return cultivoMapper.toResponse(cultivoRepository.save(cultivo));
