@@ -23,8 +23,5 @@ public interface FincaRepository extends JpaRepository<Finca, Integer> {
 
     List<Finca> findByHectareasGreaterThanEqual(BigDecimal hectareas);
 
-    @Query("SELECT f FROM Finca f WHERE f.productor.idUsuario = :idProductor " +
-           "AND f.hectareas >= :minHectareas")
-    List<Finca> findByProductorAndMinHectareas(@Param("idProductor") Integer idProductor,
-                                                @Param("minHectareas") BigDecimal minHectareas);
+    boolean existsByNombreFincaAndProductor_IdUsuario(String nombreFinca, Integer idProductor);
 }
