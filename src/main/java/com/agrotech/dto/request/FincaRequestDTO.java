@@ -4,9 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-import java.io.Serializable;
-
-public class FincaRequest {
+public class FincaRequestDTO {
 
     @NotBlank(message = "El nombre de la finca es obligatorio")
     private String nombreFinca;
@@ -17,12 +15,16 @@ public class FincaRequest {
     @NotNull(message = "La ubicación es obligatoria")
     private Integer idUbicacion;
 
-    public FincaRequest() {}
+    @NotNull(message = "El número de lotes es obligatorio")
+    private Integer numLotes;
 
-    public FincaRequest(String nombreFinca, Double hectareas, Integer idUbicacion) {
+    public FincaRequestDTO() {}
+
+    public FincaRequestDTO(String nombreFinca, Double hectareas, Integer idUbicacion, Integer numLotes) {
         this.nombreFinca = nombreFinca;
         this.hectareas = hectareas;
         this.idUbicacion = idUbicacion;
+        this.numLotes = numLotes;
     }
 
     public String getNombreFinca() {
@@ -49,12 +51,20 @@ public class FincaRequest {
         this.idUbicacion = idUbicacion;
     }
 
+    public Integer getNumLotes() {
+        return numLotes;
+    }
+
+    public void setNumLotes(Integer numLotes) {
+        this.numLotes = numLotes;
+    }
+
     @Override
     public String toString() {
         return "FincaRequest{" +
                 "nombreFinca='" + nombreFinca + '\'' +
                 ", hectareas=" + hectareas +
                 ", idUbicacion=" + idUbicacion +
-                '}';
+                " numLotes=" + numLotes + "}";
     }
 }

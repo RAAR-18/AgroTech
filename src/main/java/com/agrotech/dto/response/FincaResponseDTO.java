@@ -1,19 +1,21 @@
 package com.agrotech.dto.response;
 
-public class FincaResponse {
+public class FincaResponseDTO {
 
     private Integer idFinca;
     private String nombreFinca;
     private Double hectareas;
     private String nombreUbicacion;
+    private Integer numLotes;
 
-    public FincaResponse() {}
+    public FincaResponseDTO() {}
 
-    public FincaResponse(Integer idFinca, String nombreFinca, Double hectareas, String nombreUbicacion) {
+    public FincaResponseDTO(Integer idFinca, String nombreFinca, Double hectareas, String nombreUbicacion, Integer numLotes) {
         this.idFinca = idFinca;
         this.nombreFinca = nombreFinca;
         this.hectareas = hectareas;
         this.nombreUbicacion = nombreUbicacion;
+        this.numLotes = numLotes;
     }
 
     public Integer getIdFinca() {
@@ -48,6 +50,14 @@ public class FincaResponse {
         this.nombreUbicacion = nombreUbicacion;
     }
 
+    public Integer getNumLotes() {
+        return numLotes;
+    }
+
+    public void setNumLotes(Integer numLotes) {
+        this.numLotes = numLotes;
+    }
+
     @Override
     public String toString() {
         return "FincaResponse{" +
@@ -55,6 +65,6 @@ public class FincaResponse {
                 ", nombreFinca='" + nombreFinca + '\'' +
                 ", hectareas=" + hectareas +
                 ", nombreUbicacion='" + nombreUbicacion + '\'' +
-                '}';
+                "numLotes=" + numLotes + '}';
     }
 }
