@@ -3,7 +3,7 @@ package com.agrotech.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class CultivoRequest {
+public class CultivoRequestDTO {
 
     @NotBlank(message = "El nombre del cultivo es obligatorio")
     private String nombre;
@@ -11,9 +11,9 @@ public class CultivoRequest {
     @NotNull(message = "El tipo de cultivo es obligatorio")
     private Integer idTipoCultivo;
 
-    public CultivoRequest() {}
+    public CultivoRequestDTO() {}
 
-    public CultivoRequest(String nombre, Integer idTipoCultivo) {
+    public CultivoRequestDTO(String nombre, Integer idTipoCultivo) {
         this.nombre = nombre;
         this.idTipoCultivo = idTipoCultivo;
     }
