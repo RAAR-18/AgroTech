@@ -2,7 +2,7 @@ package com.agrotech.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 
-public class SiembraEstadoCultivoRequest {
+public class SiembraEstadoCultivoRequestDTO {
 
     @NotNull(message = "El ID de la siembra es obligatorio")
     private Integer idSiembra;
@@ -10,9 +10,9 @@ public class SiembraEstadoCultivoRequest {
     @NotNull(message = "El ID del estado de cultivo es obligatorio")
     private Integer idEstadoCultivo;
 
-    public SiembraEstadoCultivoRequest() {}
+    public SiembraEstadoCultivoRequestDTO() {}
 
-    public SiembraEstadoCultivoRequest(Integer idSiembra, Integer idEstadoCultivo) {
+    public SiembraEstadoCultivoRequestDTO(Integer idSiembra, Integer idEstadoCultivo) {
         this.idSiembra = idSiembra;
         this.idEstadoCultivo = idEstadoCultivo;
     }

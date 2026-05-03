@@ -1,7 +1,7 @@
 package com.agrotech.mapper;
 
 import com.agrotech.Entity.SiembraEstadoCultivo;
-import com.agrotech.dto.response.SiembraEstadoCultivoResponse;
+import com.agrotech.dto.response.SiembraEstadoCultivoResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -14,6 +14,6 @@ public interface SiembraEstadoCultivoMapper {
     @Mapping(source = "siembra.cultivo.nombre", target = "nombreCultivo")
     @Mapping(source = "siembra.finca.nombreFinca", target = "nombreFinca")
     @Mapping(source = "fechaEstado", target = "fechaEstado")
-    SiembraEstadoCultivoResponse toResponse(SiembraEstadoCultivo siembraEstadoCultivo);
+    SiembraEstadoCultivoResponseDTO toResponse(SiembraEstadoCultivo siembraEstadoCultivo);
 
 }

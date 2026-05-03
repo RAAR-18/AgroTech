@@ -1,8 +1,8 @@
 package com.agrotech.controller;
 
-import com.agrotech.dto.request.SiembraRequest;
-import com.agrotech.dto.response.SiembraResponse;
-import com.agrotech.servicio.SiembraServicio;
+import com.agrotech.dto.request.SiembraRequestDTO;
+import com.agrotech.dto.response.SiembraResponseDTO;
+import com.agrotech.service.SiembraService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,41 +12,41 @@ import java.util.List;
 @RequestMapping("/api/siembras")
 public class SiembraController {
 
-    private final SiembraServicio siembraServicio;
+    private final SiembraService siembraService;
 
-    public SiembraController(SiembraServicio siembraServicio) {
-        this.siembraServicio = siembraServicio;
+    public SiembraController(SiembraService siembraService) {
+        this.siembraService = siembraService;
     }
 
     // crear
     @PostMapping("/crear")
-    public ResponseEntity<SiembraResponse> crearSiembra(@RequestBody SiembraRequest siembraRequest) {
-        SiembraResponse response = siembraServicio.crear(siembraRequest);
+    public ResponseEntity<SiembraResponseDTO> crearSiembra(@RequestBody SiembraRequestDTO siembraRequestDTO) {
+        SiembraResponseDTO response = siembraService.crear(siembraRequestDTO);
         return ResponseEntity.ok(response);
     }
 
     // listar todas las siembras
     @GetMapping("/listar")
-    public ResponseEntity<List<SiembraResponse>> listarSiembras() {
-        return ResponseEntity.ok(siembraServicio.listar());
+    public ResponseEntity<List<SiembraResponseDTO>> listarSiembras() {
+        return ResponseEntity.ok(siembraService.listar());
     }
 
     // buscar por finca
     @GetMapping("/finca/{idFinca}")
-    public ResponseEntity<List<SiembraResponse>> buscarPorFinca(@PathVariable Integer idFinca) {
-        return ResponseEntity.ok(siembraServicio.bucarPorFinca(idFinca));
+    public ResponseEntity<List<SiembraResponseDTO>> buscarPorFinca(@PathVariable Integer idFinca) {
+        return ResponseEntity.ok(siembraService.bucarPorFinca(idFinca));
     }
 
     // buscar por cultivo
     @GetMapping("/cultivo/{idCultivo}")
-    public ResponseEntity<List<SiembraResponse>> buscarPorCultivo(@PathVariable Integer idCultivo) {
-        return ResponseEntity.ok(siembraServicio.bucarPorCultivo(idCultivo));
+    public ResponseEntity<List<SiembraResponseDTO>> buscarPorCultivo(@PathVariable Integer idCultivo) {
+        return ResponseEntity.ok(siembraService.bucarPorCultivo(idCultivo));
     }
 
     // eliminar
     @DeleteMapping("/eliminar/{idSiembra}")
     public ResponseEntity<Void> eliminarSiembra(@PathVariable Integer idSiembra) {
-        siembraServicio.eliminar(idSiembra);
+        siembraService.eliminar(idSiembra);
         return ResponseEntity.noContent().build();
     }
 }

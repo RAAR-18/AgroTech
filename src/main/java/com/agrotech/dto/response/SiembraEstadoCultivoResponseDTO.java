@@ -2,7 +2,7 @@ package com.agrotech.dto.response;
 
 import java.time.LocalDateTime;
 
-public class SiembraEstadoCultivoResponse {
+public class SiembraEstadoCultivoResponseDTO {
 
     private Integer idSiembra;
     private Integer idEstadoCultivo;
@@ -11,9 +11,9 @@ public class SiembraEstadoCultivoResponse {
     private String nombreFinca;
     private LocalDateTime fechaEstado;
 
-    public SiembraEstadoCultivoResponse() {}
+    public SiembraEstadoCultivoResponseDTO() {}
 
-    public SiembraEstadoCultivoResponse(Integer idSiembra, Integer idEstadoCultivo, String nombreEstado, String nombreFinca, LocalDateTime fechaEstado, String nombreCultivo) {
+    public SiembraEstadoCultivoResponseDTO(Integer idSiembra, Integer idEstadoCultivo, String nombreEstado, String nombreFinca, LocalDateTime fechaEstado, String nombreCultivo) {
         this.idSiembra = idSiembra;
         this.idEstadoCultivo = idEstadoCultivo;
         this.nombreEstado = nombreEstado;
