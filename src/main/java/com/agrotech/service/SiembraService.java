@@ -17,5 +17,7 @@ public interface SiembraService {
 
     List<SiembraResponseDTO> buscarPorFincaYCultivo(Integer idFinca, Integer idCultivo);
 
+    List<SiembraResponseDTO> buscarPorFincaYLote(Integer idFinca, Integer numLote);
+
     void eliminar(Integer idSiembra);
 }

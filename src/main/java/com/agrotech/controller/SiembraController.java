@@ -49,6 +49,12 @@ public class SiembraController {
         return ResponseEntity.ok(siembraService.buscarPorFincaYCultivo(idFinca, idCultivo));
     }
 
+    // buscar por finca y lote
+    @GetMapping("/finca/{idFinca}/lote/{numLote}")
+    public ResponseEntity<List<SiembraResponseDTO>> buscarPorFincaYLote(@PathVariable Integer idFinca, @PathVariable Integer numLote) {
+        return ResponseEntity.ok(siembraService.buscarPorFincaYLote(idFinca, numLote));
+    }
+
     // eliminar
     @DeleteMapping("/eliminar/{idSiembra}")
     public ResponseEntity<Void> eliminarSiembra(@PathVariable Integer idSiembra) {

@@ -120,6 +120,23 @@ public class SiembraServiceImpl implements SiembraService {
                 .toList();
         }
 
+
+
+     // Buscar por número de lote
+     @Override
+     @Transactional(readOnly = true)
+     public List<SiembraResponseDTO> buscarPorFincaYLote(Integer idFinca, Integer numLote) {
+         return siembraRepository.findByFincaAndNumLoteConUltimoEstado(idFinca, numLote).stream()
+                 .map(siembra -> {
+                     SiembraResponseDTO response = siembraMapper.toResponse(siembra);
+                     siembra.getEstadosCultivo().stream()
+                             .findFirst()
+                             .ifPresent(sec -> response.setNombreEstado(sec.getEstadoCultivo().getNombre()));
+                     return response;
+                 })
+                 .toList();
+     }
+
      // Eliminar siembra
      @Override
     public void eliminar(Integer idSiembra) {
