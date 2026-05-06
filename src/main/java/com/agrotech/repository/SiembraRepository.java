@@ -12,16 +12,6 @@ import java.util.List;
 @Repository
 public interface SiembraRepository extends JpaRepository<Siembra, Integer> {
 
-    // Buscar siembra por cultivo
-    List<Siembra> findByCultivo_IdCultivo(Integer idCultivo);
-
-    // Buscar siembra por finca
-    List<Siembra> findByFinca_IdFinca(Integer idFinca);
-
-    @Query("SELECT s FROM Siembra s JOIN s.estadosCultivo sec " +
-           "WHERE sec.estadoCultivo.idEstadoCultivo = :idEstado")
-    List<Siembra> findByEstadoCultivo(@Param("idEstado") Integer idEstado);
-
     @Query("SELECT s FROM Siembra s " +
             "LEFT JOIN FETCH s.estadosCultivo sec " +
             "LEFT JOIN FETCH sec.estadoCultivo ec " +
