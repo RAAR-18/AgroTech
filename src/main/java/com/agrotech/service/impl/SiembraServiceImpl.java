@@ -66,7 +66,13 @@ public class SiembraServiceImpl implements SiembraService {
      @Override
     public List<SiembraResponseDTO> listar() {
         return siembraRepository.findAll().stream()
-                .map(siembraMapper::toResponse)
+                .map(siembra -> {
+                    SiembraResponseDTO response = siembraMapper.toResponse(siembra);
+                    siembra.getEstadosCultivo().stream()
+                            .findFirst()
+                            .ifPresent(estado -> response.setNombreEstado(estado.getEstadoCultivo().getNombre()));
+                    return response;
+                })
                 .toList();
      }
 
@@ -74,15 +80,27 @@ public class SiembraServiceImpl implements SiembraService {
      @Override
     public java.util.List<SiembraResponseDTO> bucarPorFinca(Integer idFinca) {
         return siembraRepository.findByFinca_IdFinca(idFinca).stream()
-                .map(siembraMapper::toResponse)
+                .map(siembra -> {
+                    SiembraResponseDTO response = siembraMapper.toResponse(siembra);
+                    siembra.getEstadosCultivo().stream()
+                            .findFirst()
+                            .ifPresent(estado -> response.setNombreEstado(estado.getEstadoCultivo().getNombre()));
+                    return response;
+                })
                 .toList();
      }
 
-        // Buscar por cultivo
+     // Buscar por cultivo
     @Override
     public List<SiembraResponseDTO> bucarPorCultivo(Integer idCultivo) {
         return siembraRepository.findByCultivo_IdCultivo(idCultivo).stream()
-                .map(siembraMapper::toResponse)
+                .map(siembra -> {
+                    SiembraResponseDTO response = siembraMapper.toResponse(siembra);
+                    siembra.getEstadosCultivo().stream()
+                            .findFirst()
+                            .ifPresent(estado -> response.setNombreEstado(estado.getEstadoCultivo().getNombre()));
+                    return response;
+                })
                 .toList();
      }
 

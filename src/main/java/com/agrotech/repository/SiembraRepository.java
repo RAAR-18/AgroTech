@@ -25,4 +25,12 @@ public interface SiembraRepository extends JpaRepository<Siembra, Integer> {
     @Query("SELECT s FROM Siembra s JOIN s.estadosCultivo sec " +
            "WHERE sec.estadoCultivo.idEstadoCultivo = :idEstado")
     List<Siembra> findByEstadoCultivo(@Param("idEstado") Integer idEstado);
+
+    @Query("SELECT s FROM Siembra s " +
+    "LEFT JOIN FETCH s.estadosCultivo sec " +
+    "WHERE sec.fechaEstado = (" +
+    "  SELECT MAX(sec2.fechaEstado) FROM SiembraEstadoCultivo sec2 " +
+    "  WHERE sec2.siembra.idSiembra = s.idSiembra" +
+    ")" )
+    List<Siembra> findAllConUltimoEstado();
 }
