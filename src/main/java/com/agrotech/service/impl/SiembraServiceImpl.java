@@ -2,6 +2,7 @@ package com.agrotech.service.impl;
 
 import com.agrotech.Entity.*;
 import com.agrotech.dto.request.SiembraRequestDTO;
+import com.agrotech.dto.request.SiembraUpdateRequestDTO;
 import com.agrotech.dto.response.SiembraResponseDTO;
 import com.agrotech.mapper.SiembraMapper;
 import com.agrotech.repository.*;
@@ -110,6 +111,35 @@ public class SiembraServiceImpl implements SiembraService {
                  .toList();
      }
 
+    @Override
+    public SiembraResponseDTO actualizar(Integer idSiembra, SiembraUpdateRequestDTO dto) {
+        Siembra siembra = siembraRepository.findById(idSiembra)
+                .orElseThrow(() -> new RuntimeException("Siembra no encontrada con ID: " + idSiembra));
+
+        if (dto.getNumLote() != null) {
+            Finca finca = dto.getIdFinca() != null
+                    ? fincaRepository.findById(dto.getIdFinca())
+                    .orElseThrow(() -> new RuntimeException("Finca no encontrada"))
+                    : siembra.getFinca();
+
+            if (dto.getNumLote() < 1 || dto.getNumLote() > finca.getNumLotes()) {
+                throw new RuntimeException("Número de lote inválido. Debe estar entre 1 y " + finca.getNumLotes());
+            }
+            siembra.setNumLote(dto.getNumLote());
+            siembra.setFinca(finca);
+        }
+
+        if (dto.getIdCultivo() != null) {
+            Cultivo cultivo = cultivoRepository.findById(dto.getIdCultivo())
+                    .orElseThrow(() -> new RuntimeException("Cultivo no encontrado"));
+            siembra.setCultivo(cultivo);
+        }
+
+        siembraRepository.save(siembra);
+
+        return buildResponse(siembra);
+    }
+
      // Eliminar siembra
      @Override
     public void eliminar(Integer idSiembra) {
@@ -123,12 +153,14 @@ public class SiembraServiceImpl implements SiembraService {
         SiembraResponseDTO response = siembraMapper.toResponse(siembra);
 
         // Estado actual y su fecha
-        siembra.getEstadosCultivo().stream()
-                .findFirst()
-                .ifPresent(sec -> {
-                    response.setNombreEstado(sec.getEstadoCultivo().getNombre());
-                    response.setFechaEstado(sec.getFechaEstado());
-                });
+        if (siembra.getEstadosCultivo() != null && !siembra.getEstadosCultivo().isEmpty()) {
+            siembra.getEstadosCultivo().stream()
+                    .findFirst()
+                    .ifPresent(sec -> {
+                        response.setNombreEstado(sec.getEstadoCultivo().getNombre());
+                        response.setFechaEstado(sec.getFechaEstado());
+                    });
+        }
 
         // Fecha de siembra (primer estado registrado)
         siembraEstadoCultivoRepository.findPrimerEstado(siembra.getIdSiembra())

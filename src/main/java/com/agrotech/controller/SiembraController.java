@@ -1,6 +1,7 @@
 package com.agrotech.controller;
 
 import com.agrotech.dto.request.SiembraRequestDTO;
+import com.agrotech.dto.request.SiembraUpdateRequestDTO;
 import com.agrotech.dto.response.SiembraResponseDTO;
 import com.agrotech.service.SiembraService;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,12 @@ public class SiembraController {
     @GetMapping("/finca/{idFinca}/lote/{numLote}")
     public ResponseEntity<List<SiembraResponseDTO>> buscarPorFincaYLote(@PathVariable Integer idFinca, @PathVariable Integer numLote) {
         return ResponseEntity.ok(siembraService.buscarPorFincaYLote(idFinca, numLote));
+    }
+
+    // actualizar
+    @PutMapping("/{idSiembra}")
+    public ResponseEntity<SiembraResponseDTO> actualizar(@PathVariable Integer idSiembra, @RequestBody SiembraUpdateRequestDTO dto) {
+        return ResponseEntity.ok(siembraService.actualizar(idSiembra, dto));
     }
 
     // eliminar
