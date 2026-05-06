@@ -10,6 +10,7 @@ import com.agrotech.service.SiembraService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -110,6 +111,22 @@ public class SiembraServiceImpl implements SiembraService {
                  .map(this::buildResponse)
                  .toList();
      }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SiembraResponseDTO> buscarPorEstado(Integer idEstado) {
+        return siembraRepository.findByEstadoCultivoConUltimoEstado(idEstado).stream()
+                .map(this::buildResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SiembraResponseDTO> buscarPorRangoFechas(LocalDateTime desde, LocalDateTime hasta) {
+        return siembraRepository.findByRangoFechaConUltimoEstado(desde, hasta).stream()
+                .map(this::buildResponse)
+                .toList();
+    }
 
     @Override
     public SiembraResponseDTO actualizar(Integer idSiembra, SiembraUpdateRequestDTO dto) {

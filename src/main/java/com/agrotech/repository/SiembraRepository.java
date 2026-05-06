@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -73,4 +74,25 @@ public interface SiembraRepository extends JpaRepository<Siembra, Integer> {
             "  WHERE sec2.siembra.idSiembra = s.idSiembra" +
             ")")
     List<Siembra> findByCultivoConUltimoEstado(@Param("idCultivo") Integer idCultivo);
+
+    @Query("SELECT s FROM Siembra s " +
+            "LEFT JOIN FETCH s.estadosCultivo sec " +
+            "LEFT JOIN FETCH sec.estadoCultivo ec " +
+            "WHERE sec.estadoCultivo.idEstadoCultivo = :idEstado " +
+            "AND sec.fechaEstado = (" +
+            "  SELECT MAX(sec2.fechaEstado) FROM SiembraEstadoCultivo sec2 " +
+            "  WHERE sec2.siembra.idSiembra = s.idSiembra" +
+            ")")
+    List<Siembra> findByEstadoCultivoConUltimoEstado(@Param("idEstado") Integer idEstado);
+
+    @Query("SELECT s FROM Siembra s " +
+            "LEFT JOIN FETCH s.estadosCultivo sec " +
+            "LEFT JOIN FETCH sec.estadoCultivo ec " +
+            "WHERE sec.fechaEstado BETWEEN :desde AND :hasta " +
+            "AND sec.fechaEstado = (" +
+            "  SELECT MAX(sec2.fechaEstado) FROM SiembraEstadoCultivo sec2 " +
+            "  WHERE sec2.siembra.idSiembra = s.idSiembra" +
+            ")")
+    List<Siembra> findByRangoFechaConUltimoEstado(@Param("desde") LocalDateTime desde,
+                                                  @Param("hasta") LocalDateTime hasta);
 }
