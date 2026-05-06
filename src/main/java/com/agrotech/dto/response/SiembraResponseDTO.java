@@ -1,5 +1,7 @@
 package com.agrotech.dto.response;
 
+import java.time.LocalDateTime;
+
 public class SiembraResponseDTO {
 
     private Integer idSiembra;
@@ -7,15 +9,19 @@ public class SiembraResponseDTO {
     private String nombreFinca;
     private String nombreEstado;
     private Integer numLote;
+    private LocalDateTime fechaSiembra;
+    private LocalDateTime fechaEstado;
 
     public SiembraResponseDTO() {}
 
-    public SiembraResponseDTO(Integer idSiembra, String nombreCultivo, String nombreFinca, String nombreEstado,Integer numLote) {
+    public SiembraResponseDTO(Integer idSiembra, String nombreCultivo, String nombreFinca, String nombreEstado,Integer numLote, LocalDateTime fechaSiembra, LocalDateTime fechaEstado) {
         this.idSiembra = idSiembra;
         this.nombreCultivo = nombreCultivo;
         this.nombreFinca = nombreFinca;
         this.nombreEstado = nombreEstado;
         this.numLote = numLote;
+        this.fechaSiembra = fechaSiembra;
+        this.fechaEstado = fechaEstado;
     }
 
     public Integer getIdSiembra() { return idSiembra; }
@@ -40,6 +46,22 @@ public class SiembraResponseDTO {
 
     public void setNombreEstado(String nombreEstado) {
         this.nombreEstado = nombreEstado;
+    }
+
+    public LocalDateTime getFechaSiembra() {
+        return fechaSiembra;
+    }
+
+    public void setFechaSiembra(LocalDateTime fechaSiembra) {
+        this.fechaSiembra = fechaSiembra;
+    }
+
+    public LocalDateTime getFechaEstado() {
+        return fechaEstado;
+    }
+
+    public void setFechaEstado(LocalDateTime fechaEstado) {
+        this.fechaEstado = fechaEstado;
     }
 
     @Override

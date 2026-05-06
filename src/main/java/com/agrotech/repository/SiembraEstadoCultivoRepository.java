@@ -31,4 +31,9 @@ public interface SiembraEstadoCultivoRepository
            "ORDER BY sec.fechaEstado DESC")
     List<SiembraEstadoCultivo> findUltimoEstado(@Param("idSiembra") Integer idSiembra);
 
+    @Query("SELECT sec FROM SiembraEstadoCultivo sec " +
+            "WHERE sec.siembra.idSiembra = :idSiembra " +
+            "ORDER BY sec.fechaEstado ASC")
+    List<SiembraEstadoCultivo> findPrimerEstado(@Param("idSiembra") Integer idSiembra);
+
 }

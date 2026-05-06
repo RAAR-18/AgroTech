@@ -22,11 +22,12 @@ public interface SiembraRepository extends JpaRepository<Siembra, Integer> {
     List<Siembra> findByEstadoCultivo(@Param("idEstado") Integer idEstado);
 
     @Query("SELECT s FROM Siembra s " +
-    "LEFT JOIN FETCH s.estadosCultivo sec " +
-    "WHERE sec.fechaEstado = (" +
-    "  SELECT MAX(sec2.fechaEstado) FROM SiembraEstadoCultivo sec2 " +
-    "  WHERE sec2.siembra.idSiembra = s.idSiembra" +
-    ")" )
+            "LEFT JOIN FETCH s.estadosCultivo sec " +
+            "LEFT JOIN FETCH sec.estadoCultivo ec " +
+            "WHERE sec.fechaEstado = (" +
+            "  SELECT MAX(sec2.fechaEstado) FROM SiembraEstadoCultivo sec2 " +
+            "  WHERE sec2.siembra.idSiembra = s.idSiembra" +
+            ")")
     List<Siembra> findAllConUltimoEstado();
 
     @Query("SELECT s FROM Siembra s " +
@@ -52,4 +53,24 @@ public interface SiembraRepository extends JpaRepository<Siembra, Integer> {
             ")")
     List<Siembra> findByFincaAndNumLoteConUltimoEstado(@Param("idFinca") Integer idFinca,
                                                        @Param("numLote") Integer numLote);
+
+    @Query("SELECT s FROM Siembra s " +
+            "LEFT JOIN FETCH s.estadosCultivo sec " +
+            "LEFT JOIN FETCH sec.estadoCultivo ec " +
+            "WHERE s.finca.idFinca = :idFinca " +
+            "AND sec.fechaEstado = (" +
+            "  SELECT MAX(sec2.fechaEstado) FROM SiembraEstadoCultivo sec2 " +
+            "  WHERE sec2.siembra.idSiembra = s.idSiembra" +
+            ")")
+    List<Siembra> findByFincaConUltimoEstado(@Param("idFinca") Integer idFinca);
+
+    @Query("SELECT s FROM Siembra s " +
+            "LEFT JOIN FETCH s.estadosCultivo sec " +
+            "LEFT JOIN FETCH sec.estadoCultivo ec " +
+            "WHERE s.cultivo.idCultivo = :idCultivo " +
+            "AND sec.fechaEstado = (" +
+            "  SELECT MAX(sec2.fechaEstado) FROM SiembraEstadoCultivo sec2 " +
+            "  WHERE sec2.siembra.idSiembra = s.idSiembra" +
+            ")")
+    List<Siembra> findByCultivoConUltimoEstado(@Param("idCultivo") Integer idCultivo);
 }

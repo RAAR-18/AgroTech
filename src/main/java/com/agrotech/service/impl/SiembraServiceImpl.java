@@ -59,81 +59,54 @@ public class SiembraServiceImpl implements SiembraService {
          siembraEstadoCultivoRepository.save(estadoInicial);
 
          SiembraResponseDTO response = siembraMapper.toResponse(siembra);
-         response.setNombreEstado(estado.getNombre());
-         return response;
+            response.setNombreEstado(estado.getNombre());
+            response.setFechaEstado(siembraRequestDTO.getFechaEstado());
+            response.setFechaSiembra(siembraRequestDTO.getFechaEstado());
+            return response;
      }
 
      // Listar todas las siembras
      @Override
-    public List<SiembraResponseDTO> listar() {
-        return siembraRepository.findAll().stream()
-                .map(siembra -> {
-                    SiembraResponseDTO response = siembraMapper.toResponse(siembra);
-                    siembra.getEstadosCultivo().stream()
-                            .findFirst()
-                            .ifPresent(estado -> response.setNombreEstado(estado.getEstadoCultivo().getNombre()));
-                    return response;
-                })
-                .toList();
+     @Transactional(readOnly = true)
+     public List<SiembraResponseDTO> listar() {
+         return siembraRepository.findAllConUltimoEstado().stream()
+                 .map(this::buildResponse)
+                 .toList();
      }
 
      // Buscar por finca
      @Override
-    public java.util.List<SiembraResponseDTO> bucarPorFinca(Integer idFinca) {
-        return siembraRepository.findByFinca_IdFinca(idFinca).stream()
-                .map(siembra -> {
-                    SiembraResponseDTO response = siembraMapper.toResponse(siembra);
-                    siembra.getEstadosCultivo().stream()
-                            .findFirst()
-                            .ifPresent(estado -> response.setNombreEstado(estado.getEstadoCultivo().getNombre()));
-                    return response;
-                })
-                .toList();
+     @Transactional(readOnly = true)
+     public List<SiembraResponseDTO> bucarPorFinca(Integer idFinca) {
+         return siembraRepository.findByFincaConUltimoEstado(idFinca).stream()
+                 .map(this::buildResponse)
+                 .toList();
      }
 
      // Buscar por cultivo
     @Override
+    @Transactional(readOnly = true)
     public List<SiembraResponseDTO> bucarPorCultivo(Integer idCultivo) {
-        return siembraRepository.findByCultivo_IdCultivo(idCultivo).stream()
-                .map(siembra -> {
-                    SiembraResponseDTO response = siembraMapper.toResponse(siembra);
-                    siembra.getEstadosCultivo().stream()
-                            .findFirst()
-                            .ifPresent(estado -> response.setNombreEstado(estado.getEstadoCultivo().getNombre()));
-                    return response;
-                })
+        return siembraRepository.findByCultivoConUltimoEstado(idCultivo).stream()
+                .map(this::buildResponse)
                 .toList();
-     }
+    }
 
      // Buscar por finca y cultivo
      @Override
      @Transactional(readOnly = true)
-    public List<SiembraResponseDTO> buscarPorFincaYCultivo(Integer idFinca, Integer idCultivo) {
-        return siembraRepository.findByFincaCultivoYUltimoEstado(idFinca, idCultivo).stream()
-                .map(siembra -> {
-                    SiembraResponseDTO response = siembraMapper.toResponse(siembra);
-                    siembra.getEstadosCultivo().stream()
-                            .findFirst()
-                            .ifPresent(estado -> response.setNombreEstado(estado.getEstadoCultivo().getNombre()));
-                    return response;
-                })
-                .toList();
-        }
-
-
+     public List<SiembraResponseDTO> buscarPorFincaYCultivo(Integer idFinca, Integer idCultivo) {
+         return siembraRepository.findByFincaCultivoYUltimoEstado(idFinca, idCultivo).stream()
+                 .map(this::buildResponse)
+                 .toList();
+     }
 
      // Buscar por número de lote
      @Override
      @Transactional(readOnly = true)
      public List<SiembraResponseDTO> buscarPorFincaYLote(Integer idFinca, Integer numLote) {
          return siembraRepository.findByFincaAndNumLoteConUltimoEstado(idFinca, numLote).stream()
-                 .map(siembra -> {
-                     SiembraResponseDTO response = siembraMapper.toResponse(siembra);
-                     siembra.getEstadosCultivo().stream()
-                             .findFirst()
-                             .ifPresent(sec -> response.setNombreEstado(sec.getEstadoCultivo().getNombre()));
-                     return response;
-                 })
+                 .map(this::buildResponse)
                  .toList();
      }
 
@@ -145,4 +118,24 @@ public class SiembraServiceImpl implements SiembraService {
         }
         siembraRepository.deleteById(idSiembra);
      }
+
+    private SiembraResponseDTO buildResponse(Siembra siembra) {
+        SiembraResponseDTO response = siembraMapper.toResponse(siembra);
+
+        // Estado actual y su fecha
+        siembra.getEstadosCultivo().stream()
+                .findFirst()
+                .ifPresent(sec -> {
+                    response.setNombreEstado(sec.getEstadoCultivo().getNombre());
+                    response.setFechaEstado(sec.getFechaEstado());
+                });
+
+        // Fecha de siembra (primer estado registrado)
+        siembraEstadoCultivoRepository.findPrimerEstado(siembra.getIdSiembra())
+                .stream()
+                .findFirst()
+                .ifPresent(sec -> response.setFechaSiembra(sec.getFechaEstado()));
+
+        return response;
+    }
 }
