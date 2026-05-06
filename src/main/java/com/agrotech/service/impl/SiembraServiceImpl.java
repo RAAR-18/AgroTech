@@ -67,7 +67,6 @@ public class SiembraServiceImpl implements SiembraService {
             return response;
      }
 
-     // Listar todas las siembras
      @Override
      @Transactional(readOnly = true)
      public List<SiembraResponseDTO> listar() {
@@ -76,7 +75,6 @@ public class SiembraServiceImpl implements SiembraService {
                  .toList();
      }
 
-     // Buscar por finca
      @Override
      @Transactional(readOnly = true)
      public List<SiembraResponseDTO> bucarPorFinca(Integer idFinca) {
@@ -85,7 +83,6 @@ public class SiembraServiceImpl implements SiembraService {
                  .toList();
      }
 
-     // Buscar por cultivo
     @Override
     @Transactional(readOnly = true)
     public List<SiembraResponseDTO> bucarPorCultivo(Integer idCultivo) {
@@ -94,7 +91,6 @@ public class SiembraServiceImpl implements SiembraService {
                 .toList();
     }
 
-     // Buscar por finca y cultivo
      @Override
      @Transactional(readOnly = true)
      public List<SiembraResponseDTO> buscarPorFincaYCultivo(Integer idFinca, Integer idCultivo) {
@@ -103,7 +99,6 @@ public class SiembraServiceImpl implements SiembraService {
                  .toList();
      }
 
-     // Buscar por número de lote
      @Override
      @Transactional(readOnly = true)
      public List<SiembraResponseDTO> buscarPorFincaYLote(Integer idFinca, Integer numLote) {
@@ -157,7 +152,6 @@ public class SiembraServiceImpl implements SiembraService {
         return buildResponse(siembra);
     }
 
-     // Eliminar siembra
      @Override
     public void eliminar(Integer idSiembra) {
         if (!siembraRepository.existsById(idSiembra)) {
