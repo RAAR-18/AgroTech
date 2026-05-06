@@ -17,11 +17,6 @@ public interface SiembraRepository extends JpaRepository<Siembra, Integer> {
     // Buscar siembra por finca
     List<Siembra> findByFinca_IdFinca(Integer idFinca);
 
-    @Query("SELECT s FROM Siembra s WHERE s.finca.idFinca = :idFinca " +
-           "AND s.cultivo.idCultivo = :idCultivo")
-    List<Siembra> findByFincaAndCultivo(@Param("idFinca") Integer idFinca,
-                                         @Param("idCultivo") Integer idCultivo);
-
     @Query("SELECT s FROM Siembra s JOIN s.estadosCultivo sec " +
            "WHERE sec.estadoCultivo.idEstadoCultivo = :idEstado")
     List<Siembra> findByEstadoCultivo(@Param("idEstado") Integer idEstado);
@@ -33,4 +28,16 @@ public interface SiembraRepository extends JpaRepository<Siembra, Integer> {
     "  WHERE sec2.siembra.idSiembra = s.idSiembra" +
     ")" )
     List<Siembra> findAllConUltimoEstado();
+
+    @Query("SELECT s FROM Siembra s " +
+    "LEFT JOIN FETCH s.estadosCultivo sec " +
+    "LEFT JOIN FETCH sec.estadoCultivo ec " +
+    "WHERE s.finca.idFinca = :idFinca " +
+    "AND s.cultivo.idCultivo = :idCultivo " +
+    "AND sec.fechaEstado = (" +
+    "  SELECT MAX(sec2.fechaEstado) FROM SiembraEstadoCultivo sec2 " +
+    "  WHERE sec2.siembra.idSiembra = s.idSiembra" +
+    ")")
+    List<Siembra> findByFincaCultivoYUltimoEstado(@Param("idFinca") Integer idFinca,
+                                                  @Param("idCultivo") Integer idCultivo);
 }

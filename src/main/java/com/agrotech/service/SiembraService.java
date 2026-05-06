@@ -15,5 +15,7 @@ public interface SiembraService {
 
     List<SiembraResponseDTO> bucarPorCultivo(Integer idCultivo);
 
+    List<SiembraResponseDTO> buscarPorFincaYCultivo(Integer idFinca, Integer idCultivo);
+
     void eliminar(Integer idSiembra);
 }

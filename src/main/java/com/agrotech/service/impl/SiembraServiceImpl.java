@@ -7,6 +7,7 @@ import com.agrotech.mapper.SiembraMapper;
 import com.agrotech.repository.*;
 import com.agrotech.service.SiembraService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -103,6 +104,21 @@ public class SiembraServiceImpl implements SiembraService {
                 })
                 .toList();
      }
+
+     // Buscar por finca y cultivo
+     @Override
+     @Transactional(readOnly = true)
+    public List<SiembraResponseDTO> buscarPorFincaYCultivo(Integer idFinca, Integer idCultivo) {
+        return siembraRepository.findByFincaCultivoYUltimoEstado(idFinca, idCultivo).stream()
+                .map(siembra -> {
+                    SiembraResponseDTO response = siembraMapper.toResponse(siembra);
+                    siembra.getEstadosCultivo().stream()
+                            .findFirst()
+                            .ifPresent(estado -> response.setNombreEstado(estado.getEstadoCultivo().getNombre()));
+                    return response;
+                })
+                .toList();
+        }
 
      // Eliminar siembra
      @Override
